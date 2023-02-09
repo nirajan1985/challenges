@@ -65,6 +65,23 @@ export const PlayerItems: React.FC<PlayerItemsProps> = ({
 };
 
 function calculateRows(items: ItemsDefinition, playerItems: string[]): Rows {
-  // todo
-  return {};
+  const rows: Rows = {};
+  const possiblePlayerItems = playerItems.filter((key) => key in items);
+
+  for (const key of possiblePlayerItems) {
+    const itemDefinition = items[key];
+    let row = rows[key]
+      ? rows[key]
+      : { item: itemDefinition, count: 0, score: 0, bonus: 0 };
+    const count = row.count + 1;
+    const bonus = itemDefinition.bonus;
+
+    rows[key] = {
+      item: itemDefinition,
+      count: count,
+      score: count * itemDefinition.value,
+      bonus: bonus && count >= bonus.count ? bonus.amount : 0,
+    };
+  }
+  return rows;
 }
